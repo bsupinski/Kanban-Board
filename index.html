@@ -9,12 +9,13 @@
       src="https://kit.fontawesome.com/b66d02489e.js"
       crossorigin="anonymous"
     ></script>
-    <script defer src="main.js"></script>
+    <script defer src="createNew.js"></script>
+    <script defer src="dragDrop.js"></script>
   </head>
   <body>
     <div class="kanban">
       <div class="itemEdit">
-        <button class="create-new">Create +</button>
+        <button class="btn create-new">Create +</button>
         <i class="fa-solid fa-trash delete"></i>
       </div>
       <div class="board">
@@ -24,79 +25,59 @@
             <div class="item">
               <p class="item__text">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis.
+                Voluptate, temporibus dolore reprehenderit laborum facilis
+                itaque, praesentium quisquam odio rem sunt, ducimus perferendis
+                architecto doloremque debitis minus maxime aperiam vitae. Omnis?
               </p>
-            </div>
-            <div class="item">
-              <p class="item__text">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis.
-              </p>
-            </div>
-            <div class="item">
-              <p class="item__text">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis.
-              </p>
+              <p class="item__creator">Ben Ben</p>
             </div>
           </div>
         </div>
 
         <div class="section to-do">
           <h2 class="title">To Do</h2>
-          <div class="section__board to-do__board" id="toDo">
-            <div class="item">
-              <p class="item__text">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis
-                itaque, praesentium quisquam odio rem sunt, ducimus perferendis
-                architecto doloremque debitis minus maxime aperiam vitae. Omnis?
-              </p>
-            </div>
-          </div>
+          <div class="section__board to-do__board" id="toDo"></div>
         </div>
 
         <div class="section in-progress">
           <h2 class="title">In Progress</h2>
-          <div class="section__board in-progres__board" id="inProgress">
-            <div class="item">
-              <p class="item__text">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis
-                itaque, praesentium quisquam odio rem sunt, ducimus perferendis
-                architecto doloremque debitis minus maxime aperiam vitae. Omnis?
-              </p>
-            </div>
-          </div>
+          <div class="section__board in-progress__board" id="inProgress"></div>
         </div>
 
         <div class="section test">
           <h2 class="title">Test</h2>
-          <div class="section__board test__board" id="test">
-            <div class="item">
-              <p class="item__text">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis
-                itaque, praesentium quisquam odio rem sunt, ducimus perferendis
-                architecto doloremque debitis minus maxime aperiam vitae. Omnis?
-              </p>
-            </div>
-          </div>
+          <div class="section__board test__board" id="test"></div>
         </div>
 
         <div class="section done">
           <h2 class="title">Done</h2>
-          <div class="section__board done__board" id="done">
-            <div class="item">
-              <p class="item__text">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptate, temporibus dolore reprehenderit laborum facilis
-                itaque, praesentium quisquam odio rem sunt, ducimus perferendis
-                architecto doloremque debitis minus maxime aperiam vitae. Omnis?
-              </p>
-            </div>
-          </div>
+          <div class="section__board done__board" id="done"></div>
         </div>
+      </div>
+    </div>
+    <div class="module hidden">
+      <div class="module__window">
+        <form class="module__form">
+          <div class="input__wrapper">
+            <label for="create">New Task</label>
+            <input type="text" id="create" />
+          </div>
+          <div class="input__wrapper">
+            <label for="creator">Created By:</label>
+            <input type="text" id="creator" />
+          </div>
+          <div class="input__wrapper">
+            <label for="appendTo">Add to</label>
+            <select id="appendTo">
+              <option selected value="stories__board">Stories</option>
+              <option value="to-do__board">To Do</option>
+              <option value="in-progress__board">In Progress</option>
+              <option value="test__board">Test</option>
+              <option value="done__board">Done</option>
+            </select>
+          </div>
+          <button type="submit" class="btn submit">Submit</button>
+        </form>
       </div>
     </div>
   </body>

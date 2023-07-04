@@ -11,6 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 
 .kanban {
@@ -26,7 +27,7 @@ body {
   width: 100%;
   margin-bottom: 2rem;
 }
-.create-new {
+.btn {
   border: none;
   background-color: transparent;
   box-shadow: 3px 5px 1px hsla(0, 0%, 2%, 0.558);
@@ -35,13 +36,13 @@ body {
   transition: all 300ms ease-in-out;
 }
 
-.create-new:hover {
+.btn:hover {
   transform: scale(1.1);
   box-shadow: 4px 7px 3px hsla(0, 0%, 2%, 0.558);
   transition: all 300ms ease-in-out;
 }
 
-.create-new:active {
+.btn:active {
   transform: scale(1);
   box-shadow: 2px 3px 1px hsla(0, 0%, 2%, 0.558);
 }
@@ -106,4 +107,50 @@ body {
   margin-bottom: 0.6rem;
   background-color: hsla(0, 1%, 85%, 0.501);
   box-shadow: 3px 5px 2px hsla(0, 0%, 2%, 0.558);
+}
+
+.module {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsla(0, 0%, 2%, 0.558);
+}
+
+.module__window {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  min-width: 320px;
+  padding: 2rem;
+  background-color: hsl(0, 0%, 89%);
+}
+.module__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: fit-content;
+}
+
+.input__wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 1.5rem;
+}
+
+.hidden {
+  display: none;
 }
