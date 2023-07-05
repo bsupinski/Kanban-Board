@@ -80,6 +80,7 @@ body {
 }
 
 .section__board {
+  content: "";
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -107,6 +108,7 @@ body {
   margin-bottom: 0.6rem;
   background-color: hsla(0, 1%, 85%, 0.501);
   box-shadow: 3px 5px 2px hsla(0, 0%, 2%, 0.558);
+  cursor: grab;
 }
 
 .module {
@@ -153,4 +155,8 @@ label {
 
 .hidden {
   display: none;
+}
+
+.is-dragging {
+  background-color: white;
 }
