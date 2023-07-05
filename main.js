@@ -5,7 +5,7 @@ const createdByInput = document.getElementById("creator");
 const addTo = document.getElementById("appendTo");
 const boards = document.querySelectorAll(".section__board");
 const submitButton = document.querySelector(".submit");
-const dropArea = document.querySelectorAll(".section");
+const trashButton = document.querySelector(".delete");
 
 createButton.addEventListener("click", (e) => {
   e.preventDefault();
@@ -51,7 +51,7 @@ const createNewItem = () => {
 
 // Drag and drop code is from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
 // By Tom and Loading
-dropArea.forEach((board) => {
+boards.forEach((board) => {
   board.addEventListener("dragover", (e) => {
     e.preventDefault();
     const bottomTask = insertAboveTask(board, e.clientY);
@@ -81,3 +81,14 @@ const insertAboveTask = (board, mouseY) => {
 
   return closestTask;
 };
+// End of code from Tom is Loading
+
+trashButton.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const currentDrag = document.querySelector(".is-dragging");
+  currentDrag.addEventListener("dragend", (e) => {
+    e.preventDefault();
+    currentDrag.remove();
+    console.log("delete");
+  });
+});

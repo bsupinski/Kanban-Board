@@ -80,11 +80,13 @@ body {
 }
 
 .section__board {
-  content: "";
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  width: 100%;
+  min-height: 600px;
+  padding: 1rem 0;
 }
 .stories {
   background-color: #de79ee;
