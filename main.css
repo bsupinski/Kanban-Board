@@ -88,19 +88,19 @@ body {
   min-height: 600px;
   padding: 1rem 0;
 }
-.stories {
+#stories {
   background-color: #de79ee;
 }
-.to-do {
+#toDo {
   background-color: #f94b4b;
 }
-.in-progress {
+#inProgress {
   background-color: #f99e4b;
 }
-.test {
+#test {
   background-color: #f9e74b;
 }
-.done {
+#done {
   background-color: #8df94b;
 }
 
