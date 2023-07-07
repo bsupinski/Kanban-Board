@@ -8,44 +8,115 @@ const submitButton = document.querySelector(".submit");
 const trashButton = document.querySelector(".delete");
 
 const defaultState = {
-  stories: [],
-  toDo: [],
-  inProgress: [],
-  test: [],
-  done: [],
+  stories: [
+    {
+      task: "test1story",
+      creator: "test1story",
+      board: "stories",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test2story",
+      creator: "test2story",
+      board: "stories",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test3story",
+      creator: "test3story",
+      board: "stories",
+      id: Math.floor(Math.random() * 100000),
+    },
+  ],
+  toDo: [
+    {
+      task: "test1toDo",
+      creator: "test1toDo",
+      board: "toDo",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test2toDo",
+      creator: "test2toDo",
+      board: "toDo",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test3toDo",
+      creator: "test3toDo",
+      board: "toDo",
+      id: Math.floor(Math.random() * 100000),
+    },
+  ],
+  inProgress: [
+    {
+      task: "test1inProgress",
+      creator: "test1inProgress",
+      board: "inProgress",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test2inProgress",
+      creator: "test2inProgress",
+      board: "inProgress",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test3inProgress",
+      creator: "test3inProgress",
+      board: "inProgress",
+      id: Math.floor(Math.random() * 100000),
+    },
+  ],
+  test: [
+    {
+      task: "test1test",
+      creator: "test1test",
+      board: "test",
+      id: `test1`,
+    },
+    {
+      task: "test2test",
+      creator: "test2test",
+      board: "test",
+      id: `test2`,
+    },
+    {
+      task: "test3test",
+      creator: "test3test",
+      board: "test",
+      id: `test3`,
+    },
+  ],
+  done: [
+    {
+      task: "test1done",
+      creator: "test1done",
+      board: "done",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test2done",
+      creator: "test2done",
+      board: "done",
+      id: Math.floor(Math.random() * 100000),
+    },
+    {
+      task: "test3done",
+      creator: "test3done",
+      board: "done",
+      id: Math.floor(Math.random() * 100000),
+    },
+  ],
 };
 
 const state = JSON.parse(localStorage.getItem("state")) || defaultState;
 
 JSON.parse(localStorage.getItem("state"));
 
-const saveLocalStorage = () => {
-  localStorage.setItem("state", JSON.stringify(state));
-};
-
-createButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  module.classList.remove("hidden");
-});
-
-submitButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  defaultState[addTo.value].push({
-    task: taskInput.value,
-    creator: createdByInput.value,
-    board: addTo.value,
-    id: `${taskInput.value}${createdByInput.value}`,
-  });
-
-  state[addTo.value].forEach((item) => {
-    createNewItem(item.task, item.creator, item.board, item.id);
-  });
-
-  module.classList.add("hidden");
-  taskInput.value = "";
-  createdByInput.value = "";
-  addTo.value = "stories";
-});
+// const saveLocalStorage = () => {
+//   localStorage.setItem("state", JSON.stringify(state));
+// };
 
 const createNewItem = (task, creator, value, id) => {
   const itemWrapper = document.createElement("div");
@@ -72,6 +143,62 @@ const createNewItem = (task, creator, value, id) => {
 
   state[addTo.value].push(itemWrapper);
 };
+
+const clearBoard = () => {
+  boards.forEach((board) => {
+    if (board.id === addTo.value) board.innerHTML = "";
+  });
+};
+
+const dragStart = (ele) => {
+  ele.addEventListener("dragstart", () => {
+    ele.classList.add("is-dragging");
+  });
+};
+
+const dragEnd = (ele) => {
+  ele.addEventListener("dragend", () => {
+    ele.classList.remove("is-dragging");
+  });
+};
+
+const iterateOverState = (board) => {
+  state[board].forEach((item) => {
+    createNewItem(item.task, item.creator, item.board, item.id);
+  });
+};
+
+const loadItemHTML = () => {
+  iterateOverState("stories");
+  iterateOverState("toDo");
+  iterateOverState("inProgress");
+  iterateOverState("test");
+  iterateOverState("done");
+};
+
+createButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  module.classList.remove("hidden");
+});
+
+submitButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  defaultState[addTo.value].push({
+    task: taskInput.value,
+    creator: createdByInput.value,
+    board: addTo.value,
+    id: Date.now(),
+  });
+
+  clearBoard();
+
+  iterateOverState(addTo.value);
+
+  module.classList.add("hidden");
+  taskInput.value = "";
+  createdByInput.value = "";
+  addTo.value = "stories";
+});
 
 // Drag and drop code is from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
 // By Tom and Loading
@@ -117,22 +244,6 @@ trashButton.addEventListener("dragover", (e) => {
   });
 });
 
-// const setBoards = () => {
-//   state.stories.forEach((item) => {
-//     boards[0].append(item);
-//   });
-// };
-
-// setBoards();
-
-const dragStart = (ele) => {
-  ele.addEventListener("dragstart", () => {
-    ele.classList.add("is-dragging");
-  });
-};
-
-const dragEnd = (ele) => {
-  ele.addEventListener("dragend", () => {
-    ele.classList.remove("is-dragging");
-  });
-};
+loadItemHTML();
+console.log(state);
+console.log(state.stories);
