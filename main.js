@@ -73,19 +73,19 @@ const defaultState = {
       task: "test1test",
       creator: "test1test",
       board: "test",
-      id: `test1`,
+      id: Math.floor(Math.random() * 100000),
     },
     {
       task: "test2test",
       creator: "test2test",
       board: "test",
-      id: `test2`,
+      id: Math.floor(Math.random() * 100000),
     },
     {
       task: "test3test",
       creator: "test3test",
       board: "test",
-      id: `test3`,
+      id: Math.floor(Math.random() * 100000),
     },
   ],
   done: [
@@ -110,70 +110,88 @@ const defaultState = {
   ],
 };
 
+let movingElement;
+let movingState;
+
 const state = JSON.parse(localStorage.getItem("state")) || defaultState;
 
 JSON.parse(localStorage.getItem("state"));
 
-// const saveLocalStorage = () => {
-//   localStorage.setItem("state", JSON.stringify(state));
-// };
+const saveLocalStorage = () => {
+  localStorage.setItem("state", JSON.stringify(state));
+};
 
-const createNewItem = (task, creator, value, id) => {
+const createNewItem = (item, board) => {
   const itemWrapper = document.createElement("div");
   itemWrapper.setAttribute("draggable", "true");
-  itemWrapper.setAttribute("data-id", id);
+  itemWrapper.setAttribute("data-id", item.id);
   itemWrapper.classList.add("item");
 
   const itemText = document.createElement("p");
   itemText.classList.add("item__text");
-  itemText.innerText = task;
+  itemText.innerText = item.task;
   itemWrapper.append(itemText);
 
   const itemCreator = document.createElement("p");
   itemCreator.classList.add("item__creator");
-  itemCreator.innerText = creator;
+  itemCreator.innerText = item.creator;
   itemWrapper.append(itemCreator);
 
   dragStart(itemWrapper);
   dragEnd(itemWrapper);
-
-  boards.forEach((board) => {
-    if (board.classList.contains(`${value}`)) board.append(itemWrapper);
-  });
-
-  state[addTo.value].push(itemWrapper);
+  document.getElementById(board).appendChild(itemWrapper);
+  // saveLocalStorage();
 };
 
 const clearBoard = () => {
   boards.forEach((board) => {
-    if (board.id === addTo.value) board.innerHTML = "";
+    board.innerHTML = "";
   });
 };
 
 const dragStart = (ele) => {
   ele.addEventListener("dragstart", () => {
     ele.classList.add("is-dragging");
+    movingElement = ele;
+    for (const board in state) {
+      state[board].forEach((item) => {
+        if (+item.id === +movingElement.dataset.id) {
+          movingState = item;
+          console.log(item.id, movingElement.dataset.id);
+          state[board].pop(item);
+        }
+        if (state[board].length < 1) state[board].shift();
+      });
+    }
   });
 };
 
 const dragEnd = (ele) => {
   ele.addEventListener("dragend", () => {
     ele.classList.remove("is-dragging");
+
+    const elementIndexInParent = Array.from(
+      movingElement.parentNode.childNodes
+    ).indexOf(movingElement);
+
+    state[movingElement.parentNode.id].splice(
+      elementIndexInParent,
+      0,
+      movingState
+    );
+    movingElement;
+    movingState;
+    // saveLocalStorage();
+    console.log(state);
   });
 };
 
-const iterateOverState = (board) => {
-  state[board].forEach((item) => {
-    createNewItem(item.task, item.creator, item.board, item.id);
-  });
-};
-
-const loadItemHTML = () => {
-  iterateOverState("stories");
-  iterateOverState("toDo");
-  iterateOverState("inProgress");
-  iterateOverState("test");
-  iterateOverState("done");
+const iterateOverState = () => {
+  for (const board in state) {
+    state[board].forEach((item) => {
+      createNewItem(item, board);
+    });
+  }
 };
 
 createButton.addEventListener("click", (e) => {
@@ -186,13 +204,13 @@ submitButton.addEventListener("click", (e) => {
   defaultState[addTo.value].push({
     task: taskInput.value,
     creator: createdByInput.value,
-    board: addTo.value,
     id: Date.now(),
   });
 
   clearBoard();
 
-  iterateOverState(addTo.value);
+  iterateOverState();
+  console.log(state);
 
   module.classList.add("hidden");
   taskInput.value = "";
@@ -234,16 +252,4 @@ const insertAboveTask = (board, mouseY) => {
 };
 // End of code from Tom is Loading
 
-trashButton.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  const currentDrag = document.querySelector(".is-dragging");
-  currentDrag.addEventListener("dragend", (e) => {
-    e.preventDefault();
-    currentDrag.remove();
-    console.log("delete");
-  });
-});
-
-loadItemHTML();
-console.log(state);
-console.log(state.stories);
+iterateOverState();
