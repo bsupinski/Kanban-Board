@@ -154,13 +154,12 @@ const dragStart = (ele) => {
     ele.classList.add("is-dragging");
     movingElement = ele;
     for (const board in state) {
-      state[board].forEach((item) => {
+      state[board].forEach((item, i) => {
         if (+item.id === +movingElement.dataset.id) {
           movingState = item;
           console.log(item.id, movingElement.dataset.id);
-          state[board].pop(item);
+          state[board].splice(i, 1);
         }
-        if (state[board].length < 1) state[board].shift();
       });
     }
   });
