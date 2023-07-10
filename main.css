@@ -85,8 +85,9 @@ body {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  min-height: 600px;
+  height: 600px;
   padding: 1rem 0;
+  overflow-x: auto;
 }
 #stories {
   background-color: #de79ee;
@@ -132,11 +133,20 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
   width: 50%;
   min-width: 320px;
   padding: 2rem;
   background-color: hsl(0, 0%, 89%);
 }
+
+.module__hide {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  cursor: pointer;
+}
+
 .module__form {
   display: flex;
   flex-direction: column;
@@ -160,5 +170,5 @@ label {
 }
 
 .is-dragging {
-  background-color: white;
+  opacity: 0.5;
 }

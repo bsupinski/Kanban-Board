@@ -1,5 +1,6 @@
 const createButton = document.querySelector(".create-new");
 const module = document.querySelector(".module");
+const hideModule = module.querySelector(".module__hide");
 const taskInput = document.getElementById("create");
 const createdByInput = document.getElementById("creator");
 const addTo = document.getElementById("appendTo");
@@ -112,6 +113,7 @@ const defaultState = {
 
 let movingElement;
 let movingState;
+let itemTodelete;
 
 const state = JSON.parse(localStorage.getItem("state")) || defaultState;
 
@@ -140,7 +142,6 @@ const createNewItem = (item, board) => {
   dragStart(itemWrapper);
   dragEnd(itemWrapper);
   document.getElementById(board).appendChild(itemWrapper);
-  // saveLocalStorage();
 };
 
 const clearBoard = () => {
@@ -157,7 +158,6 @@ const dragStart = (ele) => {
       state[board].forEach((item, i) => {
         if (+item.id === +movingElement.dataset.id) {
           movingState = item;
-          console.log(item.id, movingElement.dataset.id);
           state[board].splice(i, 1);
         }
       });
@@ -180,8 +180,7 @@ const dragEnd = (ele) => {
     );
     movingElement;
     movingState;
-    // saveLocalStorage();
-    console.log(state);
+    saveLocalStorage();
   });
 };
 
@@ -198,23 +197,45 @@ createButton.addEventListener("click", (e) => {
   module.classList.remove("hidden");
 });
 
+hideModule.addEventListener("click", (e) => {
+  e.preventDefault();
+  module.classList.add("hidden");
+});
+
 submitButton.addEventListener("click", (e) => {
   e.preventDefault();
-  defaultState[addTo.value].push({
+  state[addTo.value].push({
     task: taskInput.value,
     creator: createdByInput.value,
     id: Date.now(),
   });
-
   clearBoard();
-
   iterateOverState();
-  console.log(state);
 
   module.classList.add("hidden");
   taskInput.value = "";
   createdByInput.value = "";
   addTo.value = "stories";
+  saveLocalStorage();
+});
+
+trashButton.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  itemTodelete = document.querySelector(".is-dragging");
+
+  itemTodelete.addEventListener("dragend", (e) => {
+    e.preventDefault();
+    for (const board in state) {
+      state[board].forEach((item, i) => {
+        if (+item.id === +itemTodelete.dataset.id) {
+          state[board].splice(i, 1);
+        }
+      });
+    }
+    itemTodelete.remove();
+    saveLocalStorage();
+    itemTodelete;
+  });
 });
 
 // Drag and drop code is from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
