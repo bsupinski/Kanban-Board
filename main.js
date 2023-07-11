@@ -114,6 +114,7 @@ const defaultState = {
 let movingElement;
 let movingState;
 let itemTodelete;
+let mouseOverTrash = false;
 
 const state = JSON.parse(localStorage.getItem("state")) || defaultState;
 
@@ -222,20 +223,28 @@ submitButton.addEventListener("click", (e) => {
 trashButton.addEventListener("dragover", (e) => {
   e.preventDefault();
   itemTodelete = document.querySelector(".is-dragging");
-
   itemTodelete.addEventListener("dragend", (e) => {
     e.preventDefault();
-    for (const board in state) {
-      state[board].forEach((item, i) => {
-        if (+item.id === +itemTodelete.dataset.id) {
-          state[board].splice(i, 1);
-        }
-      });
+    if (itemTodelete) {
+      for (const board in state) {
+        state[board].forEach((item, i) => {
+          if (+item.id === +itemTodelete.dataset.id) {
+            state[board].splice(i, 1);
+          }
+        });
+      }
+      itemTodelete.remove();
+      itemTodelete = null;
+      saveLocalStorage();
     }
-    itemTodelete.remove();
-    saveLocalStorage();
-    itemTodelete;
   });
+});
+
+trashButton.addEventListener("dragleave", (e) => {
+  e.preventDefault();
+  console.log(itemTodelete);
+  itemTodelete = null;
+  console.log(itemTodelete);
 });
 
 // Drag and drop code is from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
