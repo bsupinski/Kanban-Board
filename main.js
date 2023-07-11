@@ -242,9 +242,7 @@ trashButton.addEventListener("dragover", (e) => {
 
 trashButton.addEventListener("dragleave", (e) => {
   e.preventDefault();
-  console.log(itemTodelete);
   itemTodelete = null;
-  console.log(itemTodelete);
 });
 
 // Drag and drop code is from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
