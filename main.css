@@ -112,6 +112,7 @@ body {
   background-color: hsla(0, 1%, 85%, 0.501);
   box-shadow: 3px 5px 2px hsla(0, 0%, 2%, 0.558);
   cursor: grab;
+  transition: all 500ms ease-in-out;
 }
 
 .module {
@@ -170,5 +171,5 @@ label {
 }
 
 .is-dragging {
-  opacity: 0.5;
+  transform: scale(0);
 }

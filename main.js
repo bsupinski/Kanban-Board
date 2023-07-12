@@ -113,8 +113,8 @@ const defaultState = {
 
 let movingElement;
 let movingState;
-let itemTodelete;
 let mouseOverTrash = false;
+let itemToDelete;
 
 const state = JSON.parse(localStorage.getItem("state")) || defaultState;
 
@@ -140,8 +140,6 @@ const createNewItem = (item, board) => {
   itemCreator.innerText = item.creator;
   itemWrapper.append(itemCreator);
 
-  dragStart(itemWrapper);
-  dragEnd(itemWrapper);
   document.getElementById(board).appendChild(itemWrapper);
 };
 
@@ -151,47 +149,67 @@ const clearBoard = () => {
   });
 };
 
-const dragStart = (ele) => {
-  ele.addEventListener("dragstart", () => {
-    ele.classList.add("is-dragging");
-    movingElement = ele;
-    for (const board in state) {
-      state[board].forEach((item, i) => {
-        if (+item.id === +movingElement.dataset.id) {
-          movingState = item;
-          state[board].splice(i, 1);
-        }
-      });
-    }
-  });
+const elementIndexInParent = () => {
+  const index = Array.from(movingElement.parentNode.childNodes).indexOf(
+    movingElement
+  );
+  return index;
 };
 
-const dragEnd = (ele) => {
-  ele.addEventListener("dragend", () => {
-    ele.classList.remove("is-dragging");
+const removeState = () => {
+  for (const board in state) {
+    state[board].forEach((item, i) => {
+      if (+item.id === +movingElement.dataset.id) {
+        movingState = item;
+        state[board].splice(i, 1);
+      }
+    });
+  }
+};
 
-    const elementIndexInParent = Array.from(
-      movingElement.parentNode.childNodes
-    ).indexOf(movingElement);
+const pickUpItem = (ele) => {
+  ele.classList.add("is-dragging");
+  movingElement = ele;
+  removeState();
+};
 
-    state[movingElement.parentNode.id].splice(
-      elementIndexInParent,
-      0,
-      movingState
-    );
+const dropItem = (ele) => {
+  ele.classList.remove("is-dragging");
+  if (ele !== itemToDelete) {
+    const eleIndex = elementIndexInParent();
+    state[movingElement.parentNode.id].splice(eleIndex, 0, movingState);
     movingElement;
     movingState;
-    saveLocalStorage();
-  });
+  }
+
+  saveLocalStorage();
 };
 
-const iterateOverState = () => {
+const deleteItem = () => {
+  itemToDelete = document.querySelector(".is-dragging");
+
+  if ((mouseOverTrash = true && itemToDelete !== null)) {
+    itemToDelete.addEventListener("dragend", () => {
+      itemToDelete.remove();
+    });
+  }
+};
+
+const createItemHTML = () => {
   for (const board in state) {
     state[board].forEach((item) => {
       createNewItem(item, board);
     });
   }
 };
+
+document.body.addEventListener("dragstart", (e) => {
+  pickUpItem(e.target);
+});
+
+document.body.addEventListener("dragend", (e) => {
+  dropItem(e.target);
+});
 
 createButton.addEventListener("click", (e) => {
   e.preventDefault();
@@ -211,7 +229,7 @@ submitButton.addEventListener("click", (e) => {
     id: Date.now(),
   });
   clearBoard();
-  iterateOverState();
+  createItemHTML();
 
   module.classList.add("hidden");
   taskInput.value = "";
@@ -220,46 +238,8 @@ submitButton.addEventListener("click", (e) => {
   saveLocalStorage();
 });
 
-trashButton.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  itemTodelete = document.querySelector(".is-dragging");
-  itemTodelete.addEventListener("dragend", (e) => {
-    e.preventDefault();
-    if (itemTodelete) {
-      for (const board in state) {
-        state[board].forEach((item, i) => {
-          if (+item.id === +itemTodelete.dataset.id) {
-            state[board].splice(i, 1);
-          }
-        });
-      }
-      itemTodelete.remove();
-      itemTodelete = null;
-      saveLocalStorage();
-    }
-  });
-});
-
-trashButton.addEventListener("dragleave", (e) => {
-  e.preventDefault();
-  itemTodelete = null;
-});
-
-// Drag and drop code is from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
+// Drag and drop code is modified from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
 // By Tom and Loading
-boards.forEach((board) => {
-  board.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    const bottomTask = insertAboveTask(board, e.clientY);
-    const curTask = document.querySelector(".is-dragging");
-    if (!bottomTask) {
-      board.appendChild(curTask);
-    } else {
-      board.insertBefore(curTask, bottomTask);
-    }
-  });
-});
-
 const insertAboveTask = (board, mouseY) => {
   const items = board.querySelectorAll(".item:not(is-dragging)");
   let closestTask = null;
@@ -277,6 +257,34 @@ const insertAboveTask = (board, mouseY) => {
 
   return closestTask;
 };
-// End of code from Tom is Loading
 
-iterateOverState();
+const dragIntoBoard = (e) => {
+  const bottomTask = insertAboveTask(e.target, e.clientY);
+  const curTask = document.querySelector(".is-dragging");
+  if (!bottomTask) {
+    e.target.appendChild(curTask);
+  } else {
+    e.target.insertBefore(curTask, bottomTask);
+  }
+};
+// End of Tom is Loading
+
+document.body.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  if (e.target.classList.contains("section__board")) {
+    mouseOverTrash = false;
+    dragIntoBoard(e);
+  }
+  // End of code from Tom is Loading
+  if (e.target.classList.contains("delete")) {
+    mouseOverTrash = true;
+    deleteItem();
+  }
+});
+
+trashButton.addEventListener("dragleave", () => {
+  mouseOverTrash = false;
+  itemToDelete = null;
+});
+
+createItemHTML();
