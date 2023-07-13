@@ -110,11 +110,9 @@ const defaultState = {
     },
   ],
 };
-
+itemDeleteable = false;
 let movingElement;
 let movingState;
-let mouseOverTrash = false;
-let itemToDelete;
 
 const state = JSON.parse(localStorage.getItem("state")) || defaultState;
 
@@ -175,24 +173,12 @@ const pickUpItem = (ele) => {
 
 const dropItem = (ele) => {
   ele.classList.remove("is-dragging");
-  if (ele !== itemToDelete) {
-    const eleIndex = elementIndexInParent();
-    state[movingElement.parentNode.id].splice(eleIndex, 0, movingState);
-    movingElement;
-    movingState;
-  }
+  const eleIndex = elementIndexInParent();
+  state[movingElement.parentNode.id].splice(eleIndex, 0, movingState);
+  movingElement;
+  movingState;
 
-  saveLocalStorage();
-};
-
-const deleteItem = () => {
-  itemToDelete = document.querySelector(".is-dragging");
-
-  if ((mouseOverTrash = true && itemToDelete !== null)) {
-    itemToDelete.addEventListener("dragend", () => {
-      itemToDelete.remove();
-    });
-  }
+  // saveLocalStorage();
 };
 
 const createItemHTML = () => {
@@ -202,41 +188,6 @@ const createItemHTML = () => {
     });
   }
 };
-
-document.body.addEventListener("dragstart", (e) => {
-  pickUpItem(e.target);
-});
-
-document.body.addEventListener("dragend", (e) => {
-  dropItem(e.target);
-});
-
-createButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  module.classList.remove("hidden");
-});
-
-hideModule.addEventListener("click", (e) => {
-  e.preventDefault();
-  module.classList.add("hidden");
-});
-
-submitButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  state[addTo.value].push({
-    task: taskInput.value,
-    creator: createdByInput.value,
-    id: Date.now(),
-  });
-  clearBoard();
-  createItemHTML();
-
-  module.classList.add("hidden");
-  taskInput.value = "";
-  createdByInput.value = "";
-  addTo.value = "stories";
-  saveLocalStorage();
-});
 
 // Drag and drop code is modified from https://www.youtube.com/watch?v=ecKw7FfikwI&t=1057s
 // By Tom and Loading
@@ -269,22 +220,65 @@ const dragIntoBoard = (e) => {
 };
 // End of Tom is Loading
 
-document.body.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  if (e.target.classList.contains("section__board")) {
-    mouseOverTrash = false;
-    dragIntoBoard(e);
-  }
-  // End of code from Tom is Loading
-  if (e.target.classList.contains("delete")) {
-    mouseOverTrash = true;
-    deleteItem();
+document.body.addEventListener("dragstart", (e) => {
+  pickUpItem(e.target);
+});
+
+document.body.addEventListener("dragend", (e) => {
+  if (itemDeleteable === true) {
+    e.target.remove();
+    itemDeleteable = false;
+  } else {
+    e.dataTransfer.dropEffect = "move";
+    dropItem(e.target);
   }
 });
 
-trashButton.addEventListener("dragleave", () => {
-  mouseOverTrash = false;
-  itemToDelete = null;
+document.body.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  // End of code from Tom is Loading
+  if (e.target.classList.contains("section__board")) {
+    dragIntoBoard(e);
+  } else if (e.target.classList.contains("delete")) {
+    itemDeleteable = true;
+  }
 });
+
+document.body.addEventListener("dragleave", (e) => {
+  if (e.target.classList.contains("delete")) {
+    console.log(e);
+  }
+});
+
+createButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  module.classList.remove("hidden");
+});
+
+hideModule.addEventListener("click", (e) => {
+  e.preventDefault();
+  module.classList.add("hidden");
+});
+
+submitButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  state[addTo.value].push({
+    task: taskInput.value,
+    creator: createdByInput.value,
+    id: Date.now(),
+  });
+  clearBoard();
+  createItemHTML();
+
+  module.classList.add("hidden");
+  taskInput.value = "";
+  createdByInput.value = "";
+  addTo.value = "stories";
+  // saveLocalStorage();
+});
+
+// trashButton.addEventListener("dragover", (e) => {
+//   movingElement.addEventListener("dragend")
+// });
 
 createItemHTML();
