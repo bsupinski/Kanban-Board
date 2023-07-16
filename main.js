@@ -1,3 +1,4 @@
+const kanban = document.querySelector(".kanban");
 const createButton = document.querySelector(".create-new");
 const module = document.querySelector(".module");
 const hideModule = module.querySelector(".module__hide");
@@ -253,11 +254,20 @@ document.body.addEventListener("dragleave", (e) => {
 createButton.addEventListener("click", (e) => {
   e.preventDefault();
   module.classList.remove("hidden");
+  kanban.classList.add("blur");
 });
 
 hideModule.addEventListener("click", (e) => {
   e.preventDefault();
   module.classList.add("hidden");
+  kanban.classList.remove("blur");
+});
+
+window.addEventListener("keydown", (e) => {
+  if (!module.classList.contains("hidden") && e.key === "Escape") {
+    module.classList.add("hidden");
+    kanban.classList.remove("blur");
+  }
 });
 
 submitButton.addEventListener("click", (e) => {
@@ -271,14 +281,11 @@ submitButton.addEventListener("click", (e) => {
   createItemHTML();
 
   module.classList.add("hidden");
+  kanban.classList.remove("blur");
   taskInput.value = "";
   createdByInput.value = "";
   addTo.value = "stories";
-  // saveLocalStorage();
+  saveLocalStorage();
 });
-
-// trashButton.addEventListener("dragover", (e) => {
-//   movingElement.addEventListener("dragend")
-// });
 
 createItemHTML();

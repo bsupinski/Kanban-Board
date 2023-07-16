@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KanBan Board</title>
     <link rel="stylesheet" href="main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/b66d02489e.js"
       crossorigin="anonymous"
@@ -50,22 +56,25 @@
         <form class="module__form">
           <div class="input__wrapper">
             <label for="create">New Task</label>
-            <input type="text" id="create" />
+            <textarea name="" id="create" cols="30" rows="10"></textarea>
           </div>
-          <div class="input__wrapper">
-            <label for="creator">Created By:</label>
-            <input type="text" id="creator" />
+          <div class="splitline-wrapper">
+            <div class="input__wrapper create-wrap">
+              <label for="creator">Created By:</label>
+              <input type="text" id="creator" />
+            </div>
+            <div class="input__wrapper appendTo-wrap">
+              <label for="appendTo">Add to</label>
+              <select id="appendTo">
+                <option selected value="stories">Stories</option>
+                <option value="toDo">To Do</option>
+                <option value="inProgress">In Progress</option>
+                <option value="test">Test</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
           </div>
-          <div class="input__wrapper">
-            <label for="appendTo">Add to</label>
-            <select id="appendTo">
-              <option selected value="stories">Stories</option>
-              <option value="toDo">To Do</option>
-              <option value="inProgress">In Progress</option>
-              <option value="test">Test</option>
-              <option value="done">Done</option>
-            </select>
-          </div>
+
           <button type="submit" class="btn submit">Submit</button>
         </form>
       </div>
